@@ -1,12 +1,13 @@
 module.exports = {
   purge: {
     enabled: !process.env.ROLLUP_WATCH,
-    content: ['./public/index.html', './src/**/*.svelte'],
+    mode: 'all',
+    content: ['./**/**/*.html', './**/**/*.svelte'],
+
     options: {
-      defaultExtractor: content => [
-        ...(content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || []),
-        ...(content.match(/(?<=class:)[^=>\/\s]*/g) || []),
-      ],
+      whitelistPatterns: [/svelte-/],
+      defaultExtractor: (content) =>
+        [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
     },
   },
   darkMode: false, // or 'media' or 'class'
